@@ -49,8 +49,20 @@ namespace ClienteServidor_Api
         }
 
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public IActionResult Put([FromRoute] int id,
+            [FromBody] EditorCarViewModel model)
         {
+            var car = Repository.GetById(id);
+            if (car == null)
+                return NotFound("Id não encontrado");
+
+            car.Price = model.Price;
+            car.Description = model.Description;
+            car.Year = model.Year;
+            car.Model = model.Model;
+            car.Mileage = model.Mileage;
+
+            return Ok(Repository.Update(car));
         }
 
         [HttpDelete("{id}")]

@@ -1,4 +1,5 @@
-﻿using ClienteServidor_Api.Models;
+﻿using ClienteServidor_Api.Data.Persistence;
+using ClienteServidor_Api.Models;
 
 
 namespace ClienteServidor_Api.Data
@@ -6,14 +7,22 @@ namespace ClienteServidor_Api.Data
     public class CarRepository : ICarRepository
     {
         private readonly Dictionary<int, Car> _context;
-        public CarRepository() =>
+        private readonly JsonWriter _writer;
+        public CarRepository()
+        {
             _context = new Dictionary<int, Car>();
+            _writer = new JsonWriter();
+        }
+
 
         public Car Add(Car car)
         {
-            if(car.Id == 0) 
-                GenerateId(car);
-            return _context[car.Id] = car;
+            if (car.Id == 0)
+                car.Id = GenerateId(car);
+
+            _context[car.Id] = car;
+            _writer.WriteCar(car);
+            return car;
         }
 
         public void Delete(int id)
@@ -30,7 +39,9 @@ namespace ClienteServidor_Api.Data
 
         public Car GetById(int id)
         {
-            return _context[id];
+            if (_context.ContainsKey(id))
+                return _context[id];
+            return null;
         }
 
         public Car Update(Car car)
@@ -38,12 +49,16 @@ namespace ClienteServidor_Api.Data
             return Add(car);
         }
 
-        private void GenerateId(Car car)
+        private int GenerateId(Car car)
         {
             int key = _context.Count;
             while (_context.ContainsKey(key))
                 key++;
-            car.Id = key;
+
+            if (key != 0)
+                return key;
+
+            return 1;
         }
     }
 }

@@ -10,7 +10,7 @@ namespace ClienteServidor_Api.ViewModels
         public string Model { get; set; }
 
         [Required(ErrorMessage = "A quilometragem é obrigatoria")]
-        public long Mileage { get; set; }
+        public int Mileage { get; set; }
 
         [Required(ErrorMessage = "O valor é obrigatorio")]
         public decimal Price { get; set; }
