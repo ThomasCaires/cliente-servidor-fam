@@ -19,6 +19,6 @@ namespace ClienteServidor_Api.Data
         public IEnumerable<Car> GetAll();
         public Car Add(Car car);
         public Car Update(Car car);
-        public void Delete(int id);
+        public Car Delete(int id);
     }
 }

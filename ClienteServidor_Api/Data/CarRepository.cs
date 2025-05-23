@@ -1,5 +1,7 @@
 ﻿using ClienteServidor_Api.Data.Persistence;
+using ClienteServidor_Api.Data.Persistence.JsonService;
 using ClienteServidor_Api.Models;
+using Microsoft.AspNetCore.Mvc;
 
 
 namespace ClienteServidor_Api.Data
@@ -8,9 +10,11 @@ namespace ClienteServidor_Api.Data
     {
         private readonly Dictionary<int, Car> _context;
         private readonly JsonWriter _writer;
-        public CarRepository()
+        public CarRepository([FromServices] JsonDataService _data)
         {
-            _context = new Dictionary<int, Car>();
+            _context = _data._context;
+            if (_context == null)
+                throw new Exception("O Json esta vazio!! o mesmo deve ser deletado para que o sistama crie um novo");
             _writer = new JsonWriter();
         }
 
@@ -21,15 +25,16 @@ namespace ClienteServidor_Api.Data
                 car.Id = GenerateId(car);
 
             _context[car.Id] = car;
-            _writer.WriteCar(car);
+            Save();
             return car;
         }
 
-        public void Delete(int id)
+        public Car Delete(int id)
         {
-            if (GetById(id) != null)
-                _context.Remove(id);
-            throw new Exception("O carro não existe em nosso sistema");
+            var removed = _context[id];
+            _context.Remove(id);
+            Save();
+            return removed;
         }
 
         public IEnumerable<Car> GetAll()
@@ -60,5 +65,7 @@ namespace ClienteServidor_Api.Data
 
             return 1;
         }
+        private void Save() =>
+            _writer.WriteCars(_context);
     }
 }

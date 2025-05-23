@@ -18,13 +18,30 @@ namespace ClienteServidor_Api
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(Repository.GetAll());
+            try
+            {
+                return Ok(Repository.GetAll());
+            }
+            catch
+            {
+                return BadRequest("01XE1 - Base de dados não encontrada");
+            }
+
+
         }
 
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public IActionResult Get([FromRoute] int id)
         {
-            return Ok(Repository.GetById(id));
+            try
+            {
+                return Ok(Repository.GetById(id));
+            }
+            catch
+            {
+                return BadRequest($"O {id} não existe!! informe um id valido");
+            }
+
         }
 
         [HttpPost]
@@ -66,8 +83,16 @@ namespace ClienteServidor_Api
         }
 
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete([FromRoute] int id)
         {
+            try
+            {
+                return Ok(Repository.Delete(id));
+            }
+            catch
+            {
+                return StatusCode(500, "Nao foi possivel remover o veiculo");
+            }
         }
     }
 }

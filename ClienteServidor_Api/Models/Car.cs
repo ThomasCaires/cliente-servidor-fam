@@ -1,7 +1,9 @@
 ﻿
-
 namespace ClienteServidor_Api.Models
 {
+    /*
+     * classe model usada como base
+     */
     public class Car
     {
         public int Id { get; set; }
@@ -9,7 +11,6 @@ namespace ClienteServidor_Api.Models
         public long Mileage { get; set; }
         public int Year { get; set; }
         public decimal Price { get; set; }
-        public string Description { get; set; } = string.Empty;
-
+        public string? Description { get; set; }
     }
 }
