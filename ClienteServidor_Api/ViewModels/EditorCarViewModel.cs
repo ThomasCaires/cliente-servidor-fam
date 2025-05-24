@@ -3,10 +3,15 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ClienteServidor_Api.ViewModels
 {
+    /// <summary>
+    /// permite que apenas as informações desejada seja obtida ou mostrada atraves de uma requisição
+    /// 
+    /// mapeia os atributos e envia mensagens de erro caso a requisição nao cumpra os requisitos
+    /// </summary>
     public class EditorCarViewModel
     {
         [Required(ErrorMessage ="O modelo é obrigatorio")]
-        [StringLength(40, MinimumLength = 3, ErrorMessage = "Este campo deve conter entre 3 e 30 caracteres")]
+        [StringLength(35, MinimumLength = 3, ErrorMessage = "Este campo deve conter entre 3 e 30 caracteres")]
         public string Model { get; set; }
 
         [Required(ErrorMessage = "A quilometragem é obrigatoria")]

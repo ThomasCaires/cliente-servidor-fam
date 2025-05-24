@@ -7,6 +7,19 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ClienteServidor_Api
 {
+    /*
+     * Controller
+     * herda de ControllerBase 
+     * define o roteamento e possui os metodos HTTP
+     * retorna tipos especificos e tambem ActionResults
+     * 
+     * rota defina pelo atributo:
+     * [Route("api/cars")] e suas variações para cada verbo HTTP -> 
+     * "api/cars" + /
+     * 
+     * utiliza da abstração ICarRepository que possui os metodos necessarios para interagir com nossa base dados
+     * sem interagir diretamente com ela
+     */
     [Route("api/cars")]
     [ApiController]
     public class CarController : ControllerBase
@@ -15,6 +28,10 @@ namespace ClienteServidor_Api
         public CarController(ICarRepository repository) =>
             Repository = repository;
 
+        /*
+         * decorado com [HttpGet]
+         * retorna um Ok -> 200 junto do resultado do metodo => um json com todos os Objs na nossa base de dados
+         */
         [HttpGet]
         public IActionResult Get()
         {
@@ -26,9 +43,15 @@ namespace ClienteServidor_Api
             {
                 return BadRequest("01XE1 - Base de dados não encontrada");
             }
-
-
         }
+
+        /*
+         * decorado com [HttpGet]
+         * retorna um Ok -> 200 apenas com o Obj de respectivo Id
+         * 
+         * int id -> obtido atraves da rota: [FromRoute] -> "api/cars/1"
+         * 
+         */
 
         [HttpGet("{id}")]
         public IActionResult Get([FromRoute] int id)
@@ -43,7 +66,16 @@ namespace ClienteServidor_Api
             }
 
         }
-
+        /*
+         * decorado com [HttpPost]
+         * retorna um Ok -> 201 created
+         * 
+         * EditorCarViewModel -> obtido do body da requisição [FromBody]
+         * EditorCarViewModel -> view model mapeia e valida os dados fornecidos no body
+         * 
+         * inicializa um Car com os dados validados
+         * 
+         */
         [HttpPost]
         public IActionResult Post(
             [FromBody] EditorCarViewModel model)
@@ -65,6 +97,11 @@ namespace ClienteServidor_Api
 
         }
 
+        /*
+         * recebe [FromRoute] int id e [FromBody] EditorCarViewModel
+         * 
+         * realiza um GetById com o id obtido da rota e passa as novas informações a ele
+         */
         [HttpPut("{id}")]
         public IActionResult Put([FromRoute] int id,
             [FromBody] EditorCarViewModel model)
@@ -81,7 +118,11 @@ namespace ClienteServidor_Api
 
             return Ok(Repository.Update(car));
         }
-
+        /*
+         * recebe [FromRoute] int id
+         * 
+         * retorna o Obj removido da base de dados
+         */
         [HttpDelete("{id}")]
         public IActionResult Delete([FromRoute] int id)
         {

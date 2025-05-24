@@ -6,7 +6,9 @@ using System.Text.Json.Serialization;
 
 namespace ClienteServidor_Api.Data.Persistence
 {
-
+    /*
+     * Classe responsavel por escrever no json
+     */
     public class JsonWriter
     {
         private readonly string _path;
@@ -14,7 +16,22 @@ namespace ClienteServidor_Api.Data.Persistence
         {
             _path = "JsonBase/Car.json";
         }
-        
+
+        /*
+         * Recebe um Dictionary<int, Car> cars
+         * testa se o arquivo existe no path e caso existir deleta o mesmo
+         * (o service JsonDataService garante que o dictionary chegue nesse ponto da aplicação devidamente carregado com os dados)
+         * isso acontece para manter os dados dentro de um jsonArray
+         * FileMode.Append -> escreve o Obj no final do arquivo
+         * { Indented = true } -> garante a identação do json
+         * 
+         * por se tratar de um Dictionary definimos os valores explicitamente
+         * ex:
+         * 
+         *      _writer.WriteString("model", item.Value.Model);
+         * 
+         * 
+         */
         public void WriteCars(Dictionary<int, Car> cars)
         {
             if (File.Exists(_path))

@@ -1,5 +1,5 @@
-﻿using ClienteServidor_Api.Models;
-using ClienteServidor_Api.ViewModels;
+﻿using ClienteServidor_Api.DTO;
+using ClienteServidor_Api.Models;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -29,11 +29,20 @@ namespace ClienteServidor_Api.Data.Persistence.JsonService
                 {
                     string jsonString = File.ReadAllText(jsonFilePath);
 
-                    List<JsonCarViewModel> cars = JsonSerializer.Deserialize<List<JsonCarViewModel>>(jsonString);
+                    /*
+                     * List e array se mostraram menos problematicas ao Deserialize
+                     * por isso é passado um DTO que mapeia os dados para serem devidamente 
+                     * desserializados em um Obj c# e depois passado ao Dictionary<int, Car> _context
+                     * garantindo que seu id seja a key no _context
+                     */
+                    List<JsonCarDTO> cars = JsonSerializer.Deserialize<List<JsonCarDTO>>(jsonString);
 
                     
                     foreach (var model in cars)
                     {
+                        /*
+                         * adiciona no _context o Id como key e depois cria o Car com os dados agora devidamente na classe base
+                         */
                         _context.Add(model.Id, new Car
                         {
                             Id = model.Id,
@@ -55,13 +64,13 @@ namespace ClienteServidor_Api.Data.Persistence.JsonService
                  * decidimos retornar um Dictionary<int, Car> vazio oque resolve a Exception lançada ao iniciar a
                  * aplicação com um Car.json vazio
                  */
-                catch (Exception ex)
+                catch
                 {
                     _context = new Dictionary<int, Car>();
                 }
 
             }
-            //caso o arquivo nao sera criado um Dictionary vazio
+            //caso o arquivo nao exista sera criado um Dictionary vazio
             else
                 _context = new Dictionary<int, Car>();
 

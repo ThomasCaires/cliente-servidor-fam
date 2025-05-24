@@ -1,8 +1,11 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace ClienteServidor_Api.ViewModels
+namespace ClienteServidor_Api.DTO
 {
-    public class JsonCarViewModel
+    /*
+     * DTO mapeando um Obj c# para um json
+     */
+    public class JsonCarDTO
     {
         [JsonPropertyName("id")]
         public int Id { get; set; }
