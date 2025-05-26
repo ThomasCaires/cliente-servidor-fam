@@ -29,6 +29,6 @@ app.UseRouting();
 //aqui estamos usando como endpoints os que sao informado no controller
 app.UseEndpoints(e => e.MapControllers()); 
 
-app.MapGet("/", () => "Api cliente servidor -- thomas, abner, fabricio, gustavo");
+app.MapGet("/", () => "Api cliente servidor -->");
 
 app.Run();
